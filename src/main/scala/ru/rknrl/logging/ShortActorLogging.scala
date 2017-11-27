@@ -9,7 +9,7 @@
 package ru.rknrl.logging
 
 import akka.actor.Actor.Receive
-import akka.actor.{Actor, ActorLogging, ActorRef}
+import akka.actor.{Actor, ActorLogging, ActorRef, ActorSelection}
 import akka.event.LoggingAdapter
 
 trait ShortActorLogging extends ActorLogging {
@@ -23,7 +23,17 @@ trait ShortActorLogging extends ActorLogging {
     to ! msg
   }
 
+  def send(to: ActorSelection, msg: Any): Unit = {
+    log.debug("→ " + msg)
+    to ! msg
+  }
+
   def forward(to: ActorRef, msg: Any): Unit = {
+    log.debug("→→ " + msg)
+    to forward msg
+  }
+
+  def forward(to: ActorSelection, msg: Any): Unit = {
     log.debug("→→ " + msg)
     to forward msg
   }
